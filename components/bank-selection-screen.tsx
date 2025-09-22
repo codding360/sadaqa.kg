@@ -1,38 +1,22 @@
 "use client"
 import { Card } from "@/components/ui/card"
+import { User } from "@/lib/users"
 
-interface Bank {
-  id: string
-  name: string
-  logo: string
-  phone: string
-  startColor: string
-  endColor: string
+interface BankSelectionScreenProps {
+  user: User
 }
 
-const user = {
-  id: "uuid",
-  name: "Save Aimeerim",
-  avatar: "/aimeerim.jpg",
-  description: "Диагноз: ЗОЛГЕНСМА. Сбор нужной суммы: 170 млн. сомов.",
-  banks: [
-    {
-      id: "mbank",
-      name: "MBank",
-      logo: "/mbank_icon_square.png",
-      phone: "+996 (777) 801 594",
-      paymentReceiver: "Луизя М.",
-      startColor: "#007E8B", // mBank red branding
-      endColor: "#009C4D", // mBank red branding
-      destination: "https://app.mbank.kg/qr/#00020101021132440012c2c.mbank.kg01020210129967778015941302125204999953034175909LUIZIa%20M.63047fd1",
-    },
-  ]
-}
-
-export function BankSelectionScreen() {
-  const handleBankClick = (bankId: string, bankName: string) => {
+export function BankSelectionScreen({ user }: BankSelectionScreenProps) {
+  const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
     console.log(`User clicked on: ${bankName}`)
-    // Handle bank selection logic here - could navigate to payment or trigger action
+    
+    if (destination) {
+      // Open the payment link in a new tab
+      window.open(destination, '_blank')
+    } else {
+      // Handle other bank selection logic here
+      console.log(`No destination URL available for ${bankName}`)
+    }
   }
 
   return (
@@ -59,7 +43,7 @@ export function BankSelectionScreen() {
             <Card
               key={bank.id}
               className="shadow-none border-none bg-white cursor-pointer py-2 transition-all duration-200 opacity-90 hover:opacity-100"
-              onClick={() => handleBankClick(bank.id, bank.name)}
+              onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
             >
               <div className="flex items-center justify-between py-2 px-5">
                 {/* Left side - Bank Logo and Info */}
