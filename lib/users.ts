@@ -37,44 +37,18 @@ export const users: User[] = [
         endColor: "#009C4D",
         destination: "https://app.mbank.kg/qr/#00020101021132440012c2c.mbank.kg01020210129967778015941302125204999953034175909LUIZIa%20M.63047fd1",
       },
-    ]
-  },
-  {
-    id: "john-uuid",
-    slug: "john-doe",
-    name: "Help John Doe",
-    avatar: "/logo.png", // Using existing logo as placeholder
-    description: "Medical treatment fund. Every donation helps save a life.",
-    banks: [
       {
-        id: "mbank",
-        name: "MBank",
-        logo: "/mbank_icon_square.png",
-        phone: "+996 (555) 123 456",
-        paymentReceiver: "John D.",
+        id: "obank",
+        name: "OBank",
+        logo: "/obank.png",
+        phone: "+996 (706) 169 293",
+        paymentReceiver: "Бактыгул Т.",
         startColor: "#007E8B",
         endColor: "#009C4D",
-      },
+        destination: "https://api.dengi.o.kg/#00020101021132680012p2p.dengi.kg01048580111214324807587510129967061692931202111302123411%D0%91%D0%B0%D0%BA%D1%82%D1%8B%D0%B3%D1%83%D0%BB%20%D0%A2.520473995303417540105908O%21Den%27gi63047E85"
+      }
     ]
   },
-  {
-    id: "maria-uuid", 
-    slug: "maria",
-    name: "Support Maria",
-    avatar: "/logo.png", // Using existing logo as placeholder
-    description: "Urgent surgery needed. Your support means everything.",
-    banks: [
-      {
-        id: "mbank",
-        name: "MBank", 
-        logo: "/mbank_icon_square.png",
-        phone: "+996 (700) 987 654",
-        paymentReceiver: "Maria K.",
-        startColor: "#007E8B",
-        endColor: "#009C4D",
-      },
-    ]
-  }
 ]
 
 export function getUserBySlug(slug: string): User | undefined {
