@@ -25,7 +25,7 @@ export const users: User[] = [
     slug: "aimeerim",
     name: "Save Aimeerim",
     avatar: "/aimeerim.jpg",
-    description: "Диагноз: ЗОЛГЕНСМА. Сбор нужной суммы: 170 млн. сомов.",
+    description: "ЗОЛГЕНСМА. Сбор нужной суммы: 170 млн. сомов.",
     banks: [
       {
         id: "mbank",
