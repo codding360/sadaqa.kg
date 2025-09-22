@@ -46,6 +46,16 @@ export const users: User[] = [
         startColor: "#007E8B",
         endColor: "#009C4D",
         destination: "https://api.dengi.o.kg/#00020101021132680012p2p.dengi.kg01048580111214324807587510129967061692931202111302123411%D0%91%D0%B0%D0%BA%D1%82%D1%8B%D0%B3%D1%83%D0%BB%20%D0%A2.520473995303417540105908O%21Den%27gi63047E85"
+      },
+      {
+        id: "optima",
+        name: "Optima Bank",
+        logo: "/optima.png",
+        phone: "+996 (777) 801 594",
+        paymentReceiver: "Луизя М.",
+        startColor: "#007E8B",
+        endColor: "#009C4D",
+        destination: "https://optimabank.kg/index.php?lang=ru#00020101021132640013QR.Optima.C2C010310010129967778015941108luizya%20m1202111302125204999953034175908luizya%20m6304779B"
       }
     ]
   },
