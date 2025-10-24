@@ -1,7 +1,7 @@
 "use client"
 import { Card } from "@/components/ui/card"
 import { Patient } from "@/lib/patients"
-import { MedicalReportViewer } from "@/components/medical-report-viewer"
+import Image from "next/image"
 
 interface BankSelectionScreenProps {
   patient: Patient
@@ -71,22 +71,31 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
         </div>
 
         {/* Separator Line */}
-        {patient.pdfDocument && (
+        {patient.reportImages && (
           <div className="my-6">
             <div className="border-t border-white/20"></div>
           </div>
         )}
 
-        {/* Medical Report Viewer */}
-        {patient.pdfDocument && (
+        {/* Medical Report Image */}
+        {patient.reportImages && (
           <div className="mb-6">
-            <MedicalReportViewer 
-              pdfPath={patient.pdfDocument.path}
-              fileName={patient.pdfDocument.fileName}
-              patientName={patient.name}
-              className="max-w-2xl mx-auto"
-            />
-          </div>
+            {
+              patient.reportImages.map((image) => (
+                <div className="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+                <div className="relative w-full" style={{ aspectRatio: '210/297' }}>
+                  <Image
+                    src={`/medical-reports/${patient.slug}/${image}`}
+                    alt={`Медицинский отчет - ${patient.name}`}
+                    fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 672px"
+                    />
+                  </div>
+                </div>
+            ))
+          }
+        </div>
         )}
 
         {/* Footer */}
