@@ -10,9 +10,11 @@ interface SourceAnalyticsProps {
 function sendToTelegram(sourceInfo: SourceInfo) {
   try {
     const source = sourceInfo.source;
+    const platform = sourceInfo.platform;
     const timestamp = sourceInfo.timestamp;
     const message = `🎯 *Source Tracking Alert*
 📍 *Source:* ${source}
+🖥️ *Platform:* ${platform}
 ⏰ *Timestamp:* ${new Date(timestamp).toLocaleString()}
 
 #SourceTracking #Analytics`;
