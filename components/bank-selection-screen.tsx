@@ -1,6 +1,7 @@
 "use client"
 import { Card } from "@/components/ui/card"
 import { Patient } from "@/lib/patients"
+import { PDFViewer } from "@/components/pdf-viewer"
 
 interface BankSelectionScreenProps {
   patient: Patient
@@ -68,6 +69,24 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
             </Card>
           ))}
         </div>
+
+        {/* Separator Line */}
+        {patient.pdfDocument && (
+          <div className="my-6">
+            <div className="border-t border-white/20"></div>
+          </div>
+        )}
+
+        {/* PDF Document Viewer */}
+        {patient.pdfDocument && (
+          <div className="mb-6">
+            <PDFViewer 
+              pdfPath={patient.pdfDocument.path}
+              fileName={patient.pdfDocument.fileName}
+              className="max-w-2xl mx-auto"
+            />
+          </div>
+        )}
 
         {/* Footer */}
         <div className="mt-8 text-center bg-white/10 p-6 rounded-xl backdrop-blur-sm">

@@ -18,6 +18,10 @@ export interface Patient {
   avatar: string
   description: string
   banks: Bank[]
+  pdfDocument?: {
+    path: string
+    fileName: string
+  }
 }
 
 export function getPatientBySlug(slug: string): Patient | undefined {

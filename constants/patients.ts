@@ -46,6 +46,10 @@ export const patients: Patient[] = [
       name: "Марат Шаршеналиев",
       avatar: "/marat_sharshenaliev.png",
       description: "Срочно нужна пересадка печени, стоимость операции — 20 000 долларов США (Индия). У пациента альвеолярная эхинококкозная инфекция печени.",
+      pdfDocument: {
+        path: "/pdf-documents/MaratSharshenaliev.pdf",
+        fileName: "Медицинский отчет - Марат Шаршеналиев.pdf"
+      },
       banks: [
         {
           id: "mbank",
