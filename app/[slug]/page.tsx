@@ -32,13 +32,32 @@ export async function generateMetadata({ params }: PageProps) {
     openGraph: {
       title: `${patient.name} - Пожертвования`,
       description: patient.description,
-      images: [patient.avatar],
+      url: `https://sadaqa.kg/${params.slug}`,
+      siteName: 'Sadaqa.kg',
+      images: [
+        {
+          url: `https://sadaqa.kg${patient.avatar}`,
+          width: 1200,
+          height: 630,
+          alt: `Фото ${patient.name}`,
+        }
+      ],
+      type: 'website',
+      locale: 'ru_RU',
     },
     twitter: {
       card: 'summary_large_image' as const,
       title: `${patient.name} - Пожертвования`,
       description: patient.description,
-      images: [patient.avatar],
+      images: [`https://sadaqa.kg${patient.avatar}`],
+      creator: '@marat.dev',
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+    alternates: {
+      canonical: `https://sadaqa.kg/${params.slug}`,
     },
   }
 }
