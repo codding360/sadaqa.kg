@@ -68,16 +68,6 @@ export const patients: Patient[] = [
           destination: "https://api.dengi.o.kg/#00020101021132680012p2p.dengi.kg01048580111212744001402910129965096907901202111302123408%D0%9C%D0%90%D0%A0%D0%90%D0%A2%20%D0%A8.520473995303417540105906O%21Bank6304B70B"
         },
         {
-          id: "optima",
-          name: "Optima Bank",
-          logo: "/optima.png",
-          phone: "+996509690790",
-          paymentReceiver: "Нурсултан Ж.",
-          startColor: "#007E8B",
-          endColor: "#009C4D",
-          destination: ""
-        },
-        {
           id: "sber",
           name: "Сбербанк",
           logo: "/sberbank.png",
