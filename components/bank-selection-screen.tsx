@@ -1,7 +1,7 @@
 "use client"
 import { Card } from "@/components/ui/card"
 import { Patient } from "@/lib/patients"
-import { PDFViewer } from "@/components/pdf-viewer"
+import { MedicalReportViewer } from "@/components/medical-report-viewer"
 
 interface BankSelectionScreenProps {
   patient: Patient
@@ -77,12 +77,13 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
           </div>
         )}
 
-        {/* PDF Document Viewer */}
+        {/* Medical Report Viewer */}
         {patient.pdfDocument && (
           <div className="mb-6">
-            <PDFViewer 
+            <MedicalReportViewer 
               pdfPath={patient.pdfDocument.path}
               fileName={patient.pdfDocument.fileName}
+              patientName={patient.name}
               className="max-w-2xl mx-auto"
             />
           </div>
