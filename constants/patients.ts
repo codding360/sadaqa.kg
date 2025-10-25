@@ -10,16 +10,6 @@ export const patients: Patient[] = [
       reportImages: ["1.jpg", '2.jpg'],
       banks: [
         {
-          id: "mbank",
-          name: "MBank",
-          logo: "/mbank_icon_square.png",
-          phone: "+996509690790",
-          paymentReceiver: "Марат Ш.",
-          startColor: "#007E8B",
-          endColor: "#009C4D",
-          destination: "https://app.mbank.kg/qr/#00020101021132440012c2c.mbank.kg01020210129965096907901302125204999953034175909MARAT%20Sh.63046f6a",
-        },
-        {
           id: "mbank-sister",
           name: "MBank",
           logo: "/mbank_icon_square.png",
