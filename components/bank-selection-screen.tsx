@@ -1,5 +1,4 @@
 "use client"
-import { Card } from "@/components/ui/card"
 import { Patient } from "@/lib/patients"
 import Image from "next/image"
 
@@ -41,9 +40,9 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
         {/* Bank Selection List */}
         <div className="space-y-3">
           {patient.banks.map((bank) => (
-            <Card
+            <button
               key={bank.id}
-              className="shadow-none border-none bg-white cursor-pointer py-2 transition-all duration-200 opacity-90 hover:opacity-100"
+              className="w-full shadow-none border-none bg-white cursor-pointer py-2 transition-all duration-200 opacity-90 hover:opacity-100 rounded-lg text-left"
               onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
             >
               <div className="flex items-center justify-between py-2 px-5">
@@ -66,7 +65,7 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
                   <p className="text-sm font-semibold text-card-foreground tracking-tight">{bank.paymentReceiver}</p>
                 </div>
               </div>
-            </Card>
+            </button>
           ))}
         </div>
 
