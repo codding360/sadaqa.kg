@@ -10,57 +10,8 @@ interface BankSelectionScreenProps {
 
 export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const [copied, setCopied] = useState(false)
-  const [source, setSource] = useState<string | null>(null)
-
-  // Capture source from URL params
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search)
-      const sourceParam = urlParams.get('source')
-      setSource(sourceParam)
-    }
-  }, [])
-
-  // Track page view and session start
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.umami) {
-      window.umami.track('page_view', {
-        patient: patient.name,
-        patient_slug: patient.slug,
-        ...(source && { source })
-      })
-    }
-  }, [patient.name, patient.slug, source])
-
-  // Track page exit
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (typeof window !== 'undefined' && window.umami) {
-        window.umami.track('page_exit', {
-          patient: patient.name,
-          patient_slug: patient.slug,
-          ...(source && { source })
-        })
-      }
-    }
-
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [patient.name, patient.slug, source])
 
   const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
-    // Track bank click event
-    if (typeof window !== 'undefined' && window.umami) {
-      window.umami.track('bank_click', {
-        bank_id: bankId,
-        bank_name: bankName,
-        patient: patient.name,
-        patient_slug: patient.slug,
-        has_destination: !!destination,
-        ...(source && { source })
-      })
-    }
-
     if (destination) {
       // Open the payment link in the same tab
       window.location.href = destination
@@ -73,16 +24,6 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const handleCopyPhone = async () => {
     const mainBank = patient.banks.find((bank) => bank.id === "obank") || patient.banks[0]
     const phoneNumber = mainBank?.phone || patient.phoneNumber || ''
-    
-    // Track copy phone event
-    if (typeof window !== 'undefined' && window.umami) {
-      window.umami.track('copy_phone', {
-        bank_name: mainBank?.name,
-        patient: patient.name,
-        patient_slug: patient.slug,
-        ...(source && { source })
-      })
-    }
     
     try {
       await navigator.clipboard.writeText(phoneNumber)
