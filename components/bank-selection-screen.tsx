@@ -2,8 +2,9 @@
 import { Patient } from "@/lib/patients"
 import Image from "next/image"
 import { CopyIcon, CheckIcon } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { sendToTelegram } from "@/components/source-analytics"
+import { sourceTracker } from "@/lib/source-tracker"
 
 interface BankSelectionScreenProps {
   patient: Patient
@@ -12,14 +13,50 @@ interface BankSelectionScreenProps {
 export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const [copied, setCopied] = useState(false)
 
-  const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
+  // Track page close events only
+  useEffect(() => {
+    const handlePageHide = () => {
+      // User is leaving the page
+      const finalSessionInfo = sourceTracker.trackAction('User closing page', {
+        patientName: patient.name,
+        finalAction: 'page_close'
+      })
+      sendToTelegram(finalSessionInfo, true) // Use beacon for reliability
+    }
 
-    sendToTelegram({
-      source: `Clicked bank: ${bankName}`,
-      platform: "browser",
-      timestamp: new Date().toISOString(),
-      url: window.location.href,
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // User switched tabs or minimized browser
+        const finalSessionInfo = sourceTracker.trackAction('User closing page', {
+          patientName: patient.name,
+          finalAction: 'page_leave'
+        })
+        sendToTelegram(finalSessionInfo, true) // Use beacon for reliability
+      }
+    }
+
+    // Use multiple events for better coverage
+    window.addEventListener('pagehide', handlePageHide)
+    // window.addEventListener('beforeunload', handlePageHide)
+    // document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener('pagehide', handlePageHide)
+      // window.removeEventListener('beforeunload', handlePageHide)
+      // document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [patient.name])
+
+  const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
+    // Track the bank click action with session duration
+    const actionInfo = sourceTracker.trackAction(`Clicked bank: ${bankName}`, {
+      bankId,
+      bankName,
+      destination,
+      patientName: patient.name
     })
+    
+    sendToTelegram(actionInfo)
     
     if (destination) {
       // Open the payment link in a new tab
@@ -34,23 +71,11 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
     const mainBank = patient.banks.find((bank) => bank.id === "obank") || patient.banks[0]
     const phoneNumber = mainBank?.phone || patient.phoneNumber || ''
     try {
-      sendToTelegram({
-        source: `Copied phone number: ${phoneNumber}`,
-        platform: "browser",
-        timestamp: new Date().toISOString(),
-        url: window.location.href,
-      })
       await navigator.clipboard.writeText(phoneNumber)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error('Failed to copy phone number:', err)
-      sendToTelegram({
-        source: `Failed to copy phone number: ${phoneNumber}`,
-        platform: "browser",
-        timestamp: new Date().toISOString(),
-        url: window.location.href,
-      })
     }
   }
 
@@ -75,7 +100,7 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
         {/* Bank Selection List */}
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-white text-center">
-            Выберите банк для получения QR кода
+            Выберите реквизиты для получения QR кода
           </h2>
         </div>
         <div className="space-y-3">
