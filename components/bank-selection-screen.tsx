@@ -119,7 +119,7 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {patient.banks.map((bank) => (
-            <div key={bank.id} className="flex flex-col items-center">
+            <div className="flex flex-col items-center">
               <button
                 className="w-full bg-white rounded-lg overflow-hidden mb-2 cursor-pointer transition-all duration-200 hover:shadow-lg"
                 onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
@@ -132,7 +132,7 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
               </button>
               <button
                 key={bank.id}
-                className="w-full bg-white/90 hover:bg-white text-gray-900 font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+                className="cursor-pointer w-full bg-white/90 hover:bg-white text-gray-900 font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
                 onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
               >
                 Открыть {bank.name}
