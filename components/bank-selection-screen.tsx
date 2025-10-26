@@ -119,7 +119,7 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {patient.banks.map((bank) => (
-            <div className="flex flex-col items-center">
+            <div key={bank.id} className="flex flex-col items-center">
               <div
                 className="w-full bg-white rounded-lg overflow-hidden mb-2 transition-all duration-200 hover:shadow-lg"
               >
@@ -130,7 +130,6 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
                 />
               </div>
               <button
-                key={bank.id}
                 className="cursor-pointer w-full bg-white/90 hover:bg-white text-gray-900 font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
                 onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
               >
@@ -190,7 +189,7 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
           <div className="mb-6">
             {
               patient.reportImages.map((image) => (
-                <div className="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
+                <div key={image} className="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
                 <div className="relative w-full" style={{ aspectRatio: '210/297' }}>
                   <Image
                     src={`/medical-reports/${patient.slug}/${image}`}
