@@ -84,11 +84,11 @@ export default function RootLayout({
         {/* End Meta Pixel Code */}
         
         {/* Umami Analytics */}
-        {/* <Script
+        <Script
           src="https://cloud.umami.is/script.js"
           data-website-id="97a52dbe-858c-4ff3-8520-9e3d5e1f7061"
           strategy="afterInteractive"
-        /> */}
+        />
         
         {children}
         <Analytics />
