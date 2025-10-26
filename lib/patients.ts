@@ -15,6 +15,7 @@ export interface Patient {
   id: string
   slug: string
   name: string
+  phoneNumber: string
   avatar: string
   description: string
   banks: Bank[]

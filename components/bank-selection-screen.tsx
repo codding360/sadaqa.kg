@@ -1,12 +1,16 @@
 "use client"
 import { Patient } from "@/lib/patients"
 import Image from "next/image"
+import { CopyIcon, CheckIcon } from "lucide-react"
+import { useState } from "react"
 
 interface BankSelectionScreenProps {
   patient: Patient
 }
 
 export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
+  const [copied, setCopied] = useState(false)
+
   const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
     console.log(`Patient clicked on: ${bankName}`)
     
@@ -16,6 +20,17 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
     } else {
       // Handle other bank selection logic here
       console.log(`No destination URL available for ${bankName}`)
+    }
+  }
+
+  const handleCopyPhone = async () => {
+    const phoneNumber = patient.phoneNumber || ''
+    try {
+      await navigator.clipboard.writeText(phoneNumber)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000) // Reset after 2 seconds
+    } catch (err) {
+      console.error('Failed to copy phone number:', err)
     }
   }
 
@@ -42,31 +57,52 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
           {patient.banks.map((bank) => (
             <button
               key={bank.id}
-              className="w-full shadow-none border-none bg-white cursor-pointer py-2 transition-all duration-200 opacity-90 hover:opacity-100 rounded-lg text-left"
+              className="w-full shadow-none border-none bg-white cursor-pointer py-4 transition-all duration-10 opacity-90 hover:opacity-100 rounded-lg text-left animate-pulse hover:animate-none"
               onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
             >
-              <div className="flex items-center justify-between py-2 px-5">
-                {/* Left side - Bank Logo and Info */}
-                <div className="flex items-center gap-3">
+              <div className="px-5">
+                <div className="flex items-center gap-4">
                   <div className="flex-shrink-0">
                     <img
                       src={bank.logo}
                       alt={`${bank.name} logo`}
-                      className="h-8 w-8 rounded-lg object-contain"
+                      className="h-10 w-10 rounded-lg object-contain"
                     />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-base font-semibold text-card-foreground leading-snug tracking-tight">{bank.name}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed font-medium">{bank.phone}</p>
+                    <p className="text-base font-medium text-card-foreground">
+                      Нажмите что бы оплатить
+                    </p>
                   </div>
-                </div>
-
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-card-foreground tracking-tight">{bank.paymentReceiver}</p>
                 </div>
               </div>
             </button>
           ))}
+          {/* patient.banks.find((bank) => bank.isMainReceiver)?.phone */}
+          <button
+              className="w-full shadow-none border-none bg-white cursor-pointer py-4 transition-all duration-10 hover:opacity-100 rounded-lg text-left animate-pulse hover:animate-none"
+              onClick={handleCopyPhone}
+            >
+              <div className="px-5">
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0">
+                    {copied ? (
+                      <CheckIcon className="h-10 w-10 text-green-600" />
+                    ) : (
+                      <CopyIcon className="h-10 w-10" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-base font-medium text-card-foreground">
+                      {copied 
+                        ? "Скопировано!" 
+                        : `Скопировать номер для оплаты другом банке`
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </button>
         </div>
 
         {/* Separator Line */}

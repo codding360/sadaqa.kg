@@ -5,6 +5,7 @@ export const patients: Patient[] = [
       id: "marat-sharshenaliev-uuid",
       slug: "marat-sharshenaliev",
       name: "Марат Шаршеналиев",
+      phoneNumber: "+996509690790",
       avatar: "/marat_sharshenaliev.png",
       description: "Срочно нужна пересадка печени, стоимость операции — 20 000 долларов США (Индия). У пациента альвеолярная эхинококкозная инфекция печени.",
       reportImages: ["1.jpg", '2.jpg'],
@@ -27,7 +28,7 @@ export const patients: Patient[] = [
           paymentReceiver: "Марат Ш.",
           startColor: "#007E8B",
           endColor: "#009C4D",
-          destination: "https://api.dengi.o.kg/#00020101021132680012p2p.dengi.kg01048580111212744001402910129965096907901202111302123408%D0%9C%D0%90%D0%A0%D0%90%D0%A2%20%D0%A8.520473995303417540105906O%21Bank6304B70B"
+          destination: "https://api.dengi.o.kg/#00020101021132680012p2p.dengi.kg01048580111212744001402910129965096907901202111302123408%D0%9C%D0%90%D0%A0%D0%90%D0%A2%20%D0%A8.520473995303417540105906O%21Bank6304B70B",
         },
         {
           id: "sber",
@@ -37,7 +38,7 @@ export const patients: Patient[] = [
           paymentReceiver: "Шарапат Ш.",
           startColor: "#007E8B",
           endColor: "#009C4D",
-          destination: "https://www.sberbank.com/sms/pbpn?requisiteNumber=79015907449"
+          destination: "https://www.sberbank.com/sms/pbpn?requisiteNumber=79015907449",
         }
       ]
     }
