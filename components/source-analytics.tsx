@@ -7,7 +7,7 @@ interface SourceAnalyticsProps {
   enableConsoleLogging?: boolean;
 }
 
-function sendToTelegram(sourceInfo: SourceInfo) {
+export function sendToTelegram(sourceInfo: SourceInfo) {
   try {
     const source = sourceInfo.source;
     const platform = sourceInfo.platform;

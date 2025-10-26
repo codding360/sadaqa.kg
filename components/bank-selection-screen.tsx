@@ -3,6 +3,7 @@ import { Patient } from "@/lib/patients"
 import Image from "next/image"
 import { CopyIcon, CheckIcon } from "lucide-react"
 import { useState } from "react"
+import { sendToTelegram } from "@/components/source-analytics"
 
 interface BankSelectionScreenProps {
   patient: Patient
@@ -12,7 +13,13 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const [copied, setCopied] = useState(false)
 
   const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
-    console.log(`Patient clicked on: ${bankName}`)
+
+    sendToTelegram({
+      source: `Clicked bank: ${bankName}`,
+      platform: "browser",
+      timestamp: new Date().toISOString(),
+      url: window.location.href,
+    })
     
     if (destination) {
       // Open the payment link in a new tab
