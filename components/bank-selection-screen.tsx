@@ -10,16 +10,27 @@ interface BankSelectionScreenProps {
 
 export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const [copied, setCopied] = useState(false)
+  const [source, setSource] = useState<string | null>(null)
+
+  // Capture source from URL params
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const sourceParam = urlParams.get('source')
+      setSource(sourceParam)
+    }
+  }, [])
 
   // Track page view and session start
   useEffect(() => {
     if (typeof window !== 'undefined' && window.umami) {
       window.umami.track('page_view', {
         patient: patient.name,
-        patient_slug: patient.slug
+        patient_slug: patient.slug,
+        ...(source && { source })
       })
     }
-  }, [patient.name, patient.slug])
+  }, [patient.name, patient.slug, source])
 
   // Track page exit
   useEffect(() => {
@@ -27,14 +38,15 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
       if (typeof window !== 'undefined' && window.umami) {
         window.umami.track('page_exit', {
           patient: patient.name,
-          patient_slug: patient.slug
+          patient_slug: patient.slug,
+          ...(source && { source })
         })
       }
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [patient.name, patient.slug])
+  }, [patient.name, patient.slug, source])
 
   const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
     // Track bank click event
@@ -44,7 +56,8 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
         bank_name: bankName,
         patient: patient.name,
         patient_slug: patient.slug,
-        has_destination: !!destination
+        has_destination: !!destination,
+        ...(source && { source })
       })
     }
 
@@ -66,7 +79,8 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
       window.umami.track('copy_phone', {
         bank_name: mainBank?.name,
         patient: patient.name,
-        patient_slug: patient.slug
+        patient_slug: patient.slug,
+        ...(source && { source })
       })
     }
     
@@ -100,39 +114,34 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
         {/* Bank Selection List */}
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-white text-center">
-            Выберите реквизиты для получения QR кода
+            Выберите реквизиты
           </h2>
         </div>
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {patient.banks.map((bank) => (
-            <button
-              key={bank.id}
-              className="w-full shadow-none border-none bg-white cursor-pointer py-4 transition-all duration-10 opacity-90 hover:opacity-100 rounded-lg text-left animate-pulse hover:animate-none"
-              onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
-            >
-              <div className="px-5">
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0">
-                    <img
-                      src={bank.logo}
-                      alt={`${bank.name} logo`}
-                      className="h-10 w-10 rounded-lg object-contain"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-base font-medium text-card-foreground">
-                      {bank.name}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {bank.phone}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </button>
+            <div key={bank.id} className="flex flex-col items-center">
+              <button
+                className="w-full bg-white rounded-lg overflow-hidden mb-2 cursor-pointer transition-all duration-200 hover:shadow-lg"
+                onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
+              >
+                <img
+                  src={bank.logo}
+                  alt={`${bank.name} logo`}
+                  className="w-full h-auto object-contain"
+                />
+              </button>
+              <button
+                className="w-full bg-white/90 hover:bg-white text-gray-900 font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+                onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
+              >
+                Открыть {bank.name}
+              </button>
+            </div>
           ))}
-          {/* patient.banks.find((bank) => bank.isMainReceiver)?.phone */}
-          <button
+          
+          {/* Copy button - spans full width on all screens */}
+          <div className="col-span-1 md:col-span-2">
+            <button
               className="w-full shadow-none border-none bg-white cursor-pointer py-4 transition-all duration-10 hover:opacity-100 rounded-lg text-left animate-pulse hover:animate-none"
               onClick={handleCopyPhone}
             >
@@ -166,6 +175,7 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
                 </div>
               </div>
             </button>
+          </div>
         </div>
 
         {/* Separator Line */}
