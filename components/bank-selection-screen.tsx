@@ -2,7 +2,17 @@
 import { Patient } from "@/lib/patients"
 import Image from "next/image"
 import { CopyIcon, CheckIcon } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
+
+declare global {
+  interface Window {
+    fbq?: (
+      action: 'track' | 'trackCustom',
+      eventName: string,
+      parameters?: Record<string, any>
+    ) => void;
+  }
+}
 
 interface BankSelectionScreenProps {
   patient: Patient
@@ -12,6 +22,11 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const [copied, setCopied] = useState(false)
 
   const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
+    // Facebook Pixel - Donate event
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Donate')
+    }
+
     if (destination) {
       // Open the payment link in the same tab
       window.location.href = destination
@@ -24,6 +39,11 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const handleCopyPhone = async () => {
     const mainBank = patient.banks.find((bank) => bank.id === "obank") || patient.banks[0]
     const phoneNumber = mainBank?.phone || patient.phoneNumber || ''
+    
+    // Facebook Pixel - Donate event
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Donate')
+    }
     
     try {
       await navigator.clipboard.writeText(phoneNumber)
