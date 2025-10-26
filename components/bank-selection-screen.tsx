@@ -120,16 +120,15 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {patient.banks.map((bank) => (
             <div className="flex flex-col items-center">
-              <button
-                className="w-full bg-white rounded-lg overflow-hidden mb-2 cursor-pointer transition-all duration-200 hover:shadow-lg"
-                onClick={() => handleBankClick(bank.id, bank.name, bank.destination)}
+              <div
+                className="w-full bg-white rounded-lg overflow-hidden mb-2 transition-all duration-200 hover:shadow-lg"
               >
                 <img
                   src={bank.logo}
                   alt={`${bank.name} logo`}
                   className="w-full h-auto object-contain"
                 />
-              </button>
+              </div>
               <button
                 key={bank.id}
                 className="cursor-pointer w-full bg-white/90 hover:bg-white text-gray-900 font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
