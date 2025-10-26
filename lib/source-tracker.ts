@@ -1,6 +1,6 @@
 export interface SourceInfo {
   source: string;
-  platform: 'instagram' | 'threads' | 'whatsapp' | 'internal' | 'direct' | 'unknown';
+  platform: string;
   referrer?: string;
   timestamp: string;
   userAgent?: string;
@@ -40,85 +40,41 @@ export class SourceTracker {
   }
 
   /**
-   * Determine the traffic source based on referrer and URL
+   * Determine the traffic source based on URL parameter
    */
   private determineSource(referrer: string, currentUrl: string): string {
-    if (!referrer) {
-      return 'direct';
-    }
-
-    // Instagram sources
-    if (referrer.includes('instagram.com') || referrer.includes('ig.me')) {
-      return 'Instagram';
-    }
-
-    // Threads sources
-    if (referrer.includes('threads.net')) {
-      return 'Threads';
-    }
-
-    // WhatsApp sources
-    if (referrer.includes('whatsapp.com') || referrer.includes('wa.me')) {
-      return 'WhatsApp';
-    }
-
-    // Internal links (same domain)
+    // Parse URL to get source parameter
     try {
-      const referrerUrl = new URL(referrer);
-      const currentUrlObj = new URL(currentUrl);
+      const urlObj = new URL(currentUrl);
+      const sourceParam = urlObj.searchParams.get('source');
       
-      if (referrerUrl.hostname === currentUrlObj.hostname) {
-        return 'Internal';
+      if (sourceParam) {
+        return sourceParam;
       }
     } catch (e) {
-      // Invalid URL, continue with other checks
+      // Invalid URL, return direct
     }
 
-    // Other external sources
-    try {
-      const referrerUrl = new URL(referrer);
-      return referrerUrl.hostname;
-    } catch (e) {
-      return 'unknown';
-    }
+    return 'direct';
   }
 
   /**
-   * Determine the platform type based on referrer and URL
+   * Determine the platform type based on URL parameter
    */
-  private determinePlatform(referrer: string, currentUrl: string): SourceInfo['platform'] {
-    if (!referrer) {
-      return 'direct';
-    }
-
-    // Instagram
-    if (referrer.includes('instagram.com') || referrer.includes('ig.me')) {
-      return 'instagram';
-    }
-
-    // Threads
-    if (referrer.includes('threads.net')) {
-      return 'threads';
-    }
-
-    // WhatsApp
-    if (referrer.includes('whatsapp.com') || referrer.includes('wa.me')) {
-      return 'whatsapp';
-    }
-
-    // Internal links
+  private determinePlatform(referrer: string, currentUrl: string): string {
+    // Parse URL to get source parameter
     try {
-      const referrerUrl = new URL(referrer);
-      const currentUrlObj = new URL(currentUrl);
+      const urlObj = new URL(currentUrl);
+      const sourceParam = urlObj.searchParams.get('source');
       
-      if (referrerUrl.hostname === currentUrlObj.hostname) {
-        return 'internal';
+      if (sourceParam) {
+        return sourceParam;
       }
     } catch (e) {
-      // Invalid URL, continue with other checks
+      // Invalid URL, return direct
     }
 
-    return 'unknown';
+    return 'direct';
   }
 
   /**
@@ -134,25 +90,11 @@ export class SourceTracker {
     console.log('⏰ Timestamp:', timestamp);
     console.log('🌐 Current URL:', url);
     
-    // Platform-specific styling
-    switch (platform) {
-      case 'instagram':
-        console.log('%c📸 Instagram Traffic Detected!', 'color: #E4405F; font-weight: bold; font-size: 14px;');
-        break;
-      case 'threads':
-        console.log('%c🧵 Threads Traffic Detected!', 'color: #000000; font-weight: bold; font-size: 14px;');
-        break;
-      case 'whatsapp':
-        console.log('%c💬 WhatsApp Traffic Detected!', 'color: #25D366; font-weight: bold; font-size: 14px;');
-        break;
-      case 'internal':
-        console.log('%c🏠 Internal Navigation Detected!', 'color: #3B82F6; font-weight: bold; font-size: 14px;');
-        break;
-      case 'direct':
-        console.log('%c🎯 Direct Access Detected!', 'color: #10B981; font-weight: bold; font-size: 14px;');
-        break;
-      default:
-        console.log('%c❓ Unknown Source Detected!', 'color: #6B7280; font-weight: bold; font-size: 14px;');
+    // Dynamic platform styling based on source parameter
+    if (platform === 'direct') {
+      console.log('%c🎯 Direct Access Detected!', 'color: #10B981; font-weight: bold; font-size: 14px;');
+    } else {
+      console.log(`%c🎯 Traffic from: ${platform}`, 'color: #3B82F6; font-weight: bold; font-size: 14px;');
     }
     
     console.groupEnd();

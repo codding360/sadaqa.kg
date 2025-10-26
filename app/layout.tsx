@@ -86,9 +86,7 @@ export default function RootLayout({
         
         {children}
         <Analytics />
-        <SourceAnalytics 
-          enableConsoleLogging={true}
-        />
+        <SourceAnalytics/>
       </body>
     </html>
   )

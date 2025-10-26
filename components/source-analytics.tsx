@@ -28,7 +28,7 @@ function sendToTelegram(sourceInfo: SourceInfo) {
 }
 
 export function SourceAnalytics({ 
-  enableConsoleLogging = true 
+  enableConsoleLogging = false 
 }: SourceAnalyticsProps) {
   useEffect(() => {
     // Only run on client side
@@ -38,11 +38,6 @@ export function SourceAnalytics({
     const timer = setTimeout(() => {
       try {
         const sourceInfo = sourceTracker.track() as SourceInfo;
-
-        if (enableConsoleLogging) {
-          console.log('Source info:', sourceInfo);
-        }
-
         sendToTelegram(sourceInfo);
       } catch (error) {
         console.error('❌ Error in source tracking:', error);
@@ -50,7 +45,7 @@ export function SourceAnalytics({
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [enableConsoleLogging]);
+  }, []);
 
   // This component doesn't render anything
   return null;
