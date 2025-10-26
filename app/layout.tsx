@@ -3,7 +3,6 @@ import Script from 'next/script'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Analytics } from '@vercel/analytics/next'
-import { SourceAnalytics } from '@/components/source-analytics'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -84,9 +83,15 @@ export default function RootLayout({
         </noscript>
         {/* End Meta Pixel Code */}
         
+        {/* Umami Analytics */}
+        <Script
+          src="https://cloud.umami.is/script.js"
+          data-website-id="97a52dbe-858c-4ff3-8520-9e3d5e1f7061"
+          strategy="afterInteractive"
+        />
+        
         {children}
         <Analytics />
-        <SourceAnalytics/>
       </body>
     </html>
   )

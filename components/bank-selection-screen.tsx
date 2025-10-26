@@ -3,8 +3,6 @@ import { Patient } from "@/lib/patients"
 import Image from "next/image"
 import { CopyIcon, CheckIcon } from "lucide-react"
 import { useState, useEffect } from "react"
-import { sendToTelegram } from "@/components/source-analytics"
-import { sourceTracker } from "@/lib/source-tracker"
 
 interface BankSelectionScreenProps {
   patient: Patient
@@ -13,51 +11,43 @@ interface BankSelectionScreenProps {
 export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const [copied, setCopied] = useState(false)
 
-  // Track page close events only
+  // Track page view and session start
   useEffect(() => {
-    const handlePageHide = () => {
-      // User is leaving the page
-      const finalSessionInfo = sourceTracker.trackAction('User closing page', {
-        patientName: patient.name,
-        finalAction: 'page_close'
+    if (typeof window !== 'undefined' && window.umami) {
+      window.umami.track('page_view', {
+        patient: patient.name,
+        patient_slug: patient.slug
       })
-      sendToTelegram(finalSessionInfo, true) // Use beacon for reliability
     }
+  }, [patient.name, patient.slug])
 
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        // User switched tabs or minimized browser
-        const finalSessionInfo = sourceTracker.trackAction('User closing page', {
-          patientName: patient.name,
-          finalAction: 'page_leave'
+  // Track page exit
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (typeof window !== 'undefined' && window.umami) {
+        window.umami.track('page_exit', {
+          patient: patient.name,
+          patient_slug: patient.slug
         })
-        sendToTelegram(finalSessionInfo, true) // Use beacon for reliability
       }
     }
 
-    // Use multiple events for better coverage
-    window.addEventListener('pagehide', handlePageHide)
-    // window.addEventListener('beforeunload', handlePageHide)
-    // document.addEventListener('visibilitychange', handleVisibilityChange)
-
-    return () => {
-      window.removeEventListener('pagehide', handlePageHide)
-      // window.removeEventListener('beforeunload', handlePageHide)
-      // document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [patient.name])
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [patient.name, patient.slug])
 
   const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
-    // Track the bank click action with session duration
-    const actionInfo = sourceTracker.trackAction(`Clicked bank: ${bankName}`, {
-      bankId,
-      bankName,
-      destination,
-      patientName: patient.name
-    })
-    
-    sendToTelegram(actionInfo)
-    
+    // Track bank click event
+    if (typeof window !== 'undefined' && window.umami) {
+      window.umami.track('bank_click', {
+        bank_id: bankId,
+        bank_name: bankName,
+        patient: patient.name,
+        patient_slug: patient.slug,
+        has_destination: !!destination
+      })
+    }
+
     if (destination) {
       // Open the payment link in a new tab
       window.open(destination, '_blank')
@@ -70,6 +60,16 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const handleCopyPhone = async () => {
     const mainBank = patient.banks.find((bank) => bank.id === "obank") || patient.banks[0]
     const phoneNumber = mainBank?.phone || patient.phoneNumber || ''
+    
+    // Track copy phone event
+    if (typeof window !== 'undefined' && window.umami) {
+      window.umami.track('copy_phone', {
+        bank_name: mainBank?.name,
+        patient: patient.name,
+        patient_slug: patient.slug
+      })
+    }
+    
     try {
       await navigator.clipboard.writeText(phoneNumber)
       setCopied(true)
