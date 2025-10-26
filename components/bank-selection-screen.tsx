@@ -31,7 +31,8 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   }
 
   const handleCopyPhone = async () => {
-    const phoneNumber = patient.phoneNumber || ''
+    const mainBank = patient.banks.find((bank) => bank.id === "obank") || patient.banks[0]
+    const phoneNumber = mainBank?.phone || patient.phoneNumber || ''
     try {
       sendToTelegram({
         source: `Copied phone number: ${phoneNumber}`,
@@ -72,6 +73,11 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
         </div>
 
         {/* Bank Selection List */}
+        <div className="mb-4">
+          <h2 className="text-xl font-semibold text-white text-center">
+            Выберите банк для получения QR кода
+          </h2>
+        </div>
         <div className="space-y-3">
           {patient.banks.map((bank) => (
             <button
@@ -90,7 +96,10 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
                   </div>
                   <div className="flex-1">
                     <p className="text-base font-medium text-card-foreground">
-                      Нажмите что бы оплатить
+                      {bank.name}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {bank.phone}
                     </p>
                   </div>
                 </div>
@@ -118,6 +127,16 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
                         : `Скопировать номер для оплаты другом банке`
                       }
                     </p>
+                    {!copied && (
+                      <>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Получатель: {patient.banks.find((bank) => bank.id === "obank")?.paymentReceiver || patient.banks[0]?.paymentReceiver}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Номер: {patient.banks.find((bank) => bank.id === "obank")?.phone || patient.banks[0]?.phone}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
