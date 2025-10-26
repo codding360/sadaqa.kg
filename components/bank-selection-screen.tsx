@@ -62,8 +62,8 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
     }
 
     if (destination) {
-      // Open the payment link in a new tab
-      window.open(destination, '_blank')
+      // Open the payment link in the same tab
+      window.location.href = destination
     } else {
       // Handle other bank selection logic here
       console.log(`No destination URL available for ${bankName}`)
