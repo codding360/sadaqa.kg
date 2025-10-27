@@ -11,6 +11,10 @@ declare global {
       eventName: string,
       parameters?: Record<string, any>
     ) => void;
+    umami?: (
+      eventName: string,
+      parameters?: Record<string, any>
+    ) => void;
   }
 }
 
@@ -25,6 +29,11 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
     // Facebook Pixel - Donate event
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'Donate')
+      window.umami?.('Donate', {
+        bankId,
+        bankName,
+        destination,
+      })
     }
 
     if (destination) {
@@ -43,6 +52,11 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
     // Facebook Pixel - Donate event
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'Donate')
+      window.umami?.('Donate', {
+        bankId: mainBank?.id || '',
+        bankName: mainBank?.name || '',
+        phoneNumber,
+      })
     }
     
     try {
