@@ -4,20 +4,6 @@ import Image from "next/image"
 import { CopyIcon, CheckIcon } from "lucide-react"
 import { useState } from "react"
 
-declare global {
-  interface Window {
-    fbq?: (
-      action: 'track' | 'trackCustom',
-      eventName: string,
-      parameters?: Record<string, any>
-    ) => void;
-    umami?: (
-      eventName: string,
-      parameters?: Record<string, any>
-    ) => void;
-  }
-}
-
 interface BankSelectionScreenProps {
   patient: Patient
 }
@@ -26,14 +12,22 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
   const [copied, setCopied] = useState(false)
 
   const handleBankClick = (bankId: string, bankName: string, destination?: string) => {
-    // Facebook Pixel - Donate event
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('track', 'Donate')
-      window.umami?.('Donate', {
-        bankId,
-        bankName,
-        destination,
-      })
+    if (typeof window !== 'undefined') {
+      // Meta Pixel - Donate event
+      if (window.fbq) {
+        window.fbq('track', 'Donate')
+      }
+
+      // Umami Analytics - Donate event
+      if (window.umami) {
+        window.umami.track('Donate', {
+          patient: patient.name,
+          patient_slug: patient.slug,
+          bank_id: bankId,
+          bank_name: bankName,
+          has_destination: !!destination
+        })
+      }
     }
 
     if (destination) {
@@ -49,14 +43,22 @@ export function BankSelectionScreen({ patient }: BankSelectionScreenProps) {
     const mainBank = patient.banks.find((bank) => bank.id === "obank") || patient.banks[0]
     const phoneNumber = mainBank?.phone || patient.phoneNumber || ''
     
-    // Facebook Pixel - Donate event
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('track', 'Donate')
-      window.umami?.('Donate', {
-        bankId: mainBank?.id || '',
-        bankName: mainBank?.name || '',
-        phoneNumber,
-      })
+    if (typeof window !== 'undefined') {
+      // Meta Pixel - Donate event
+      if (window.fbq) {
+        window.fbq('track', 'Donate')
+      }
+
+      // Umami Analytics - Donate event
+      if (window.umami) {
+        window.umami.track('Donate', {
+          patient: patient.name,
+          patient_slug: patient.slug,
+          bank_id: mainBank?.id,
+          bank_name: mainBank?.name,
+          action: 'copy_phone'
+        })
+      }
     }
     
     try {
